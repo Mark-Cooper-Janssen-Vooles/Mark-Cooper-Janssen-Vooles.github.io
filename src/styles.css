@@ -1,0 +1,154 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--background);
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  user-select: none;
+}
+
+.stage__canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.stage[data-interactive='true'] {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.stage[data-ready='false'] canvas {
+  opacity: 0;
+}
+
+.stage[data-fade='true'] canvas {
+  transition: opacity var(--intro-fade) ease-out;
+}
+
+.pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 3px;
+  translate: -50% -50%;
+  background: var(--dash);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.top-bar,
+.name {
+  position: absolute;
+  z-index: 1;
+}
+
+.top-bar {
+  top: var(--inset);
+  right: var(--inset);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.social {
+  display: flex;
+  gap: 14px;
+}
+
+.social a {
+  display: block;
+  color: var(--icon);
+  border-radius: 3px;
+  transition: color 150ms ease-out;
+}
+
+.social a:hover,
+.social a:focus-visible {
+  color: var(--icon-hover);
+}
+
+.social a:focus-visible {
+  outline: 2px solid var(--icon-hover);
+  outline-offset: 4px;
+}
+
+.social svg {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  fill: currentColor;
+}
+
+.tagline {
+  margin: 0;
+  font: 700 min(var(--tagline-size), 3.5vw) / var(--icon-size) Inter, system-ui, sans-serif;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  color: var(--icon);
+  cursor: inherit;
+}
+
+.name {
+  bottom: var(--inset);
+  left: var(--inset);
+  margin: 0;
+  font: 700 var(--name-size) / var(--name-line) Inter, system-ui, sans-serif;
+  letter-spacing: var(--name-spacing);
+  color: var(--name);
+  white-space: nowrap;
+  perspective: 800px;
+  cursor: inherit;
+}
+
+.letter {
+  display: inline-block;
+}
+
+.letter--flipping {
+  animation: flip var(--flip-duration) ease-out;
+}
+
+@keyframes flip {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+    opacity: 0.2;
+  }
+}
