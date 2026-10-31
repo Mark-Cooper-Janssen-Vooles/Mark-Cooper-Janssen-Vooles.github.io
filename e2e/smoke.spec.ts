@@ -101,4 +101,21 @@ test.describe('on a touch device', () => {
     await expect(stage).toHaveAttribute('data-scratching', 'false');
     expect(await page.evaluate(() => window.scrollY)).toBe(0);
   });
+
+  test('flips letters a finger drags across', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.stage')).toHaveAttribute('data-interactive', 'true');
+    const letters = page.locator('.letter');
+    const first = (await letters.nth(0).boundingBox())!;
+    const third = (await letters.nth(2).boundingBox())!;
+    const y = first.y + first.height / 2;
+
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: first.x - 10, y: y - 80 }] });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: first.x + first.width / 2, y }] });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: third.x + third.width / 2, y }] });
+    await expect(letters.nth(2)).toHaveClass(/letter--flipping/);
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await expect(page.locator('.stage')).toHaveAttribute('data-scratching', 'false');
+  });
 });

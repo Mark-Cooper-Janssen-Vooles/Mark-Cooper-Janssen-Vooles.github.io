@@ -7,7 +7,7 @@ function Letter({ char, animate }: { char: string; animate: boolean }) {
   return (
     <span
       className={flipping ? 'letter letter--flipping' : 'letter'}
-      onMouseEnter={() => animate && setFlipping(true)}
+      onPointerEnter={() => animate && setFlipping(true)}
       onAnimationEnd={() => setFlipping(false)}
     >
       {char}

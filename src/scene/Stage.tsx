@@ -117,7 +117,9 @@ export function Stage({ reducedMotion, children }: Props) {
           },
           onPointerDown: (e: PointerEvent) => {
             if (e.button !== 0 || (e.target as Element).closest('a')) return;
-            e.currentTarget.setPointerCapture(e.pointerId);
+            // Touch stays uncaptured so the letters under a moving finger still get pointerenter.
+            if (e.pointerType === 'touch') (e.target as Element).releasePointerCapture(e.pointerId);
+            else e.currentTarget.setPointerCapture(e.pointerId);
             const cell = toCell(e, field);
             pointer.pressed = true;
             setScratching(true);
@@ -128,7 +130,7 @@ export function Stage({ reducedMotion, children }: Props) {
           },
           onPointerUp: endScratch,
           onPointerCancel: endScratch,
-          onLostPointerCapture: endScratch,
+          onLostPointerCapture: (e: PointerEvent) => e.pointerType !== 'touch' && endScratch(),
           onPointerLeave: () => {
             pointer.inside = false;
             pointer.wake();
