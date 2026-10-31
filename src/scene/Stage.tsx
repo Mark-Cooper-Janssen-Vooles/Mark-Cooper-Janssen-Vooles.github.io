@@ -6,8 +6,7 @@ import { buildField, loadPhoto, type Field } from './buildField';
 import { DashScene, type Pointer } from './DashScene';
 
 const DESCRIPTION =
-  'Artwork: Mark seen from behind at his desk, facing his monitors, beside a window and a floor lamp, drawn in short blue dashes.';
-const SCRATCH_HINT = ' Click and drag to scratch the dashes away and reveal the photo underneath.';
+  'Artwork: Mark seen from behind at his desk, facing his monitors, beside a window and a floor lamp, drawn in short blue dashes. Drag across it to scratch the dashes away and reveal the photo underneath.';
 const RESIZE_DEBOUNCE_MS = 150;
 
 function useDebouncedSize(ref: RefObject<HTMLElement | null>) {
@@ -38,18 +37,18 @@ function useDebouncedSize(ref: RefObject<HTMLElement | null>) {
 const now = () => performance.now() / 1000;
 
 interface Props {
-  interactive: boolean;
   reducedMotion: boolean;
   children: ReactNode;
 }
 
-export function Stage({ interactive, reducedMotion, children }: Props) {
+export function Stage({ reducedMotion, children }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const size = useDebouncedSize(ref);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [slow, setSlow] = useState(false);
   const [introStart, setIntroStart] = useState<number | null>(null);
   const [introDone, setIntroDone] = useState(false);
+  const [scratching, setScratching] = useState(false);
   const pointer = useRef<Pointer>({ x: 0, y: 0, inside: false, pressed: false, wake: () => {} }).current;
   const lastCell = useRef<{ x: number; y: number } | null>(null);
 
@@ -81,7 +80,7 @@ export function Stage({ interactive, reducedMotion, children }: Props) {
     lastCell.current = null;
   }, [field]);
 
-  const active = interactive && introDone && field !== null;
+  const active = introDone && field !== null;
 
   const toCell = (e: PointerEvent, f: Field) => {
     const rect = ref.current!.getBoundingClientRect();
@@ -94,6 +93,7 @@ export function Stage({ interactive, reducedMotion, children }: Props) {
     if (!field || !pointer.pressed) return;
     lastCell.current = null;
     pointer.pressed = false;
+    setScratching(false);
     field.mask.endScratch(now());
     pointer.wake();
   };
@@ -106,7 +106,7 @@ export function Stage({ interactive, reducedMotion, children }: Props) {
     active && field
       ? {
           onPointerMove: (e: PointerEvent) => {
-            pointer.inside = true;
+            pointer.inside = e.pointerType !== 'touch';
             const cell = toCell(e, field);
             pointer.wake();
             const from = lastCell.current;
@@ -120,6 +120,7 @@ export function Stage({ interactive, reducedMotion, children }: Props) {
             e.currentTarget.setPointerCapture(e.pointerId);
             const cell = toCell(e, field);
             pointer.pressed = true;
+            setScratching(true);
             field.mask.beginScratch(now());
             field.mask.scratch(cell.x, cell.y, brushCells(field), tuning.scratch.strength, now());
             lastCell.current = cell;
@@ -140,12 +141,13 @@ export function Stage({ interactive, reducedMotion, children }: Props) {
       ref={ref}
       className="stage"
       data-interactive={active}
+      data-scratching={scratching}
       data-ready={introStart !== null}
       data-fade={reducedMotion}
       {...handlers}
     >
       {children}
-      <div className="stage__canvas" role="img" aria-label={interactive ? DESCRIPTION + SCRATCH_HINT : DESCRIPTION}>
+      <div className="stage__canvas" role="img" aria-label={DESCRIPTION}>
         <Canvas frameloop="demand" orthographic flat linear dpr={[1, 2]} gl={{ alpha: true, antialias: true }}>
           {field && photo && introStart !== null && (
             <DashScene

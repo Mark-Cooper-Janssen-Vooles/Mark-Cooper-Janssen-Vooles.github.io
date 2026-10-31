@@ -9,7 +9,7 @@ export function App() {
 
   return (
     <main className="page">
-      <Stage interactive={!coarsePointer} reducedMotion={reducedMotion}>
+      <Stage reducedMotion={reducedMotion}>
         <NameStrip animate={!reducedMotion && !coarsePointer} />
         <div className="top-bar">
           <p className="tagline">FULL STACK SOFTWARE ENGINEER</p>

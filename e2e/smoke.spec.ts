@@ -83,10 +83,22 @@ test.describe('on a touch device', () => {
   const { defaultBrowserType, ...pixel } = devices['Pixel 7'];
   test.use(pixel);
 
-  test('renders the static fallback', async ({ page }) => {
+  test('scratches with a touch drag', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('.stage canvas')).toBeVisible();
-    await expect(page.locator('.stage')).toHaveAttribute('data-interactive', 'false');
+    const stage = page.locator('.stage');
+    await expect(stage).toHaveAttribute('data-interactive', 'true');
     await expect(page.getByRole('link', { name: 'GitHub' })).toBeVisible();
+
+    const box = (await stage.boundingBox())!;
+    const cdp = await page.context().newCDPSession(page);
+    const touch = (type: 'touchStart' | 'touchMove' | 'touchEnd', x = 0, y = 0) =>
+      cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
+
+    await touch('touchStart', box.x + 100, box.y + 200);
+    await expect(stage).toHaveAttribute('data-scratching', 'true');
+    await touch('touchMove', box.x + 200, box.y + 260);
+    await touch('touchEnd');
+    await expect(stage).toHaveAttribute('data-scratching', 'false');
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
   });
 });
