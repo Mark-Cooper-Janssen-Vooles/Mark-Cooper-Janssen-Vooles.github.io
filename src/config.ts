@@ -1,3 +1,4 @@
+const pale = '#9fb0f0';
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 
 export const tuning = {
@@ -5,9 +6,8 @@ export const tuning = {
     background: '#1f1c19',
     dashShadow: '#1a2a6b',
     dashHighlight: '#c3cdff',
-    // #3a5bbf from the spec is 2.8:1 on the background; brightened to clear 3:1.
-    name: '#4467cc',
-    icon: '#9fb0f0',
+    name: pale,
+    icon: pale,
     iconHover: '#e4e9ff',
   },
   grid: {
