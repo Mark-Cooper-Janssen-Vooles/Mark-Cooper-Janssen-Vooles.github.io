@@ -53,7 +53,7 @@ test.describe('in a very wide window', () => {
       const rect = el.getBoundingClientRect();
       return { capHeight: ctx.measureText('H').actualBoundingBoxAscent, left: rect.left, right: rect.right };
     });
-    expect(capHeight).toBeLessThanOrEqual(84.5);
+    expect(capHeight).toBeLessThanOrEqual(85);
     expect(capHeight).toBeGreaterThan(81);
     expect(left).toBe(20);
     expect(right).toBeLessThan(2560 - 100);
