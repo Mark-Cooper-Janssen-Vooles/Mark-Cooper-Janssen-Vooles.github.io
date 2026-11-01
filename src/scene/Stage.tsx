@@ -94,7 +94,6 @@ export function Stage({ reducedMotion, children }: Props) {
     lastCell.current = null;
     pointer.pressed = false;
     setScratching(false);
-    field.mask.endScratch(now());
     pointer.wake();
   };
 
@@ -123,7 +122,6 @@ export function Stage({ reducedMotion, children }: Props) {
             const cell = toCell(e, field);
             pointer.pressed = true;
             setScratching(true);
-            field.mask.beginScratch(now());
             field.mask.scratch(cell.x, cell.y, brushCells(field), tuning.scratch.strength, now());
             lastCell.current = cell;
             pointer.wake();

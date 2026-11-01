@@ -59,7 +59,7 @@ export function buildField(image: HTMLImageElement, width: number, height: numbe
     seeds[i] = Math.random();
   });
 
-  const { delayMs, durationMs, ease, stagger, timeWeight, depthWeight } = tuning.heal;
-  const heal = { delay: delayMs / 1000, duration: durationMs / 1000, ease, stagger, timeWeight, depthWeight };
+  const { delayMs, durationMs, ease } = tuning.heal;
+  const heal = { delay: delayMs / 1000, duration: durationMs / 1000, ease };
   return { cols, rows, crop, mask: new RevealMask(cols, rows, heal, tuning.scratch), count, cells, tones, dithers, seeds };
 }

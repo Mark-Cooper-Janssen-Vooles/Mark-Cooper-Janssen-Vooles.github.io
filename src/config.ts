@@ -41,12 +41,9 @@ export const tuning = {
     strength: 0.5,
   },
   heal: {
-    delayMs: 1000,
+    delayMs: 2000,
     durationMs: 8000,
     ease: easeOutCubic,
-    stagger: 1,
-    timeWeight: 1,
-    depthWeight: 1,
     driftPx: 18,
   },
   photo: {

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { stampBrush } from './brush';
 import { RevealMask } from './revealMask';
 
-const heal = { delay: 1, duration: 8, ease: (t: number) => t, stagger: 1, timeWeight: 1, depthWeight: 1 };
+const heal = { delay: 2, duration: 8, ease: (t: number) => t };
 const brush = { armWidth: 0.22, jagged: 0.6 };
 
 describe('stampBrush', () => {
