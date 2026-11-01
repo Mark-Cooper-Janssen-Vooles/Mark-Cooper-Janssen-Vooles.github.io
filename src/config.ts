@@ -1,5 +1,5 @@
 const pale = '#9fb0f0';
-const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
+const easeOutQuint = (t: number) => 1 - (1 - t) ** 5;
 
 export const tuning = {
   palette: {
@@ -41,9 +41,9 @@ export const tuning = {
     strength: 0.5,
   },
   heal: {
-    delayMs: 2000,
+    delayMs: 0,
     durationMs: 8000,
-    ease: easeOutCubic,
+    ease: easeOutQuint,
     driftPx: 18,
   },
   photo: {
